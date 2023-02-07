@@ -22,18 +22,12 @@ const guessNumberFromRange = () => {
             }
         }
     
-        console.log(arrayFromUserRange);
-    
-        return arrayFromUserRange ;
+        return arrayFromUserRange;
     };
 
     const getRandomNumberFromUserRange = (arrayFromUserRange) => {
-        
-        const randomIndex = Math.floor(Math.random() * arrayFromUserRange.length);
     
-        const randomNumber = arrayFromUserRange[randomIndex];
-    
-        console.log(randomNumber);
+        const randomNumber = arrayFromUserRange[Math.floor(Math.random() * arrayFromUserRange.length)];
     
         return randomNumber;
     };
@@ -41,37 +35,52 @@ const guessNumberFromRange = () => {
     let userGuess;
     const arrayOfUserGuesses = [];
 
-    const checkRepeat = (arrayOfUserGuesses, userGuess) => {
-        for (let guess of arrayOfUserGuesses) {
-            if (guess === userGuess) {
-                alert('Это число вы уже вводили.');
-                return true;
-            }
-        }
-        return false;
-    }
+    const checkNumber = (arrayFromUserRange, arrayOfUserGuesses, userGuess) => {
 
-    const getNumberFromUser = () => {
-        do {
-            userGuess = +prompt('Введите вашу отгадку.');
-        } while (checkRepeat(arrayOfUserGuesses, userGuess))
+        if (userGuess === null) return false;
         
-        arrayOfUserGuesses.push(userGuess);
+        if (typeof userGuess !== 'number' && isNaN(userGuess)) {
+            alert('Введите число!');
+            return true;  
+        }
+
+        if (arrayOfUserGuesses.includes(+userGuess)){
+            alert('Это число вы уже вводили.');
+            return true;
+        }
+
+        if (!arrayFromUserRange.includes(+userGuess)) {
+            alert('Это число не входит в указанный диапазон.');
+            return true;
+        }
+
+        return false;
+    }      
+
+    const getNumberFromUser = (arrayFromUserRange, arrayOfUserGuesses) => {
+        do {
+            userGuess = prompt('Введите вашу отгадку.');
+        } while (checkNumber(arrayFromUserRange, arrayOfUserGuesses, userGuess))
+        
+        if (userGuess !== null && typeof +userGuess === 'number' && !isNaN(+userGuess)) arrayOfUserGuesses.push(+userGuess);
+console.log(arrayOfUserGuesses);
         return userGuess;
     }
 
     const arrayFromUserRange = getArrayFromUserRange();
     const randomNumber = getRandomNumberFromUserRange(arrayFromUserRange);
-    getNumberFromUser();
+    getNumberFromUser(arrayFromUserRange, arrayOfUserGuesses);
+
+    let maximumAttempts;
+    if (arrayFromUserRange.length >= 50 && arrayFromUserRange.length <= 100) {
+        maximumAttempts = 15;
+    } else {
+        maximumAttempts = Math.round(arrayFromUserRange.length * 0.3);
+    }
 
     while (userGuess !== randomNumber) { 
 
-        if (arrayFromUserRange.length >= 50 && arrayFromUserRange.length <= 100 && arrayOfUserGuesses.length === 15) {
-            alert('Вы исчерпали все попытки. Игра закончена.');
-            break;
-        }
-
-        if (arrayOfUserGuesses.length === Math.round(arrayFromUserRange.length * 0.3)) {
+        if (arrayOfUserGuesses.length === maximumAttempts) {
             alert('Вы исчерпали все попытки. Игра закончена.');
             break;
         }
@@ -81,28 +90,21 @@ const guessNumberFromRange = () => {
             break;
         }
 
-        if (typeof userGuess !== 'number' && isNaN(userGuess)) {
-            alert('Введите число!');
-            getNumberFromUser();  
-        }
-
         if (userGuess > randomNumber) {
-            alert('Меньше!');
-            getNumberFromUser();
+            alert(`Меньше! Осталось ${maximumAttempts - arrayOfUserGuesses.length} попыток.`);
         }
 
         if (userGuess < randomNumber) {
-            alert('Больше!');
-            getNumberFromUser();
+            alert(`Больше! Осталось ${maximumAttempts - arrayOfUserGuesses.length} попыток.`);
         }
 
         if (userGuess == randomNumber) {
             alert('Правильно!');
             break;
         }
-    };
 
-    console.log(arrayOfUserGuesses);
+        getNumberFromUser(arrayFromUserRange, arrayOfUserGuesses);
+    };
 
 }
 

@@ -5,13 +5,13 @@ const getLeapYears = (n, m) => {
    const allYearsInRange = [];
    
    if (n > m ) {
-      for (let i = m; i <= n ;i++) {
-         allLeapYearsInRange.push(i);
+      for (let i = m; i <= n; i++) {
+         allYearsInRange.push(i);
       } 
    }
 
    if (m > n ) {
-      for (let i = n; i <= m ;i++) {
+      for (let i = n; i <= m; i++) {
          allYearsInRange.push(i);
       }
    }
@@ -22,4 +22,4 @@ const getLeapYears = (n, m) => {
 }
 
 
-console.log(getLeapYears(2070,2100));
+console.log(getLeapYears(-200,100));
